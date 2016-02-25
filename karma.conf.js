@@ -16,11 +16,24 @@ function listFiles() {
     devDependencies: true
   });
 
-  return wiredep(wiredepOptions).js
+  var patterns = wiredep(wiredepOptions).js
     .concat([
       path.join(conf.paths.tmp, '/serve/app/index.module.js'),
     ])
     .concat(pathSrcHtml);
+
+  var files = patterns.map(function(pattern) {
+    return {
+      pattern: pattern
+    };
+  });
+  files.push({
+    pattern: path.join(conf.paths.src, '/assets/**/*'),
+    included: false,
+    served: true,
+    watched: false
+  });
+  return files;
 }
 
 module.exports = function(config) {
@@ -34,7 +47,7 @@ module.exports = function(config) {
 
     ngHtml2JsPreprocessor: {
       stripPrefix: conf.paths.src + '/',
-      moduleName: 'entretien'
+      moduleName: 'talendTodoTest'
     },
 
     logLevel: 'WARN',
@@ -55,11 +68,15 @@ module.exports = function(config) {
       dir : 'coverage/'
     },
 
-    reporters: ['progress']
+    reporters: ['progress'],
+
+    proxies: {
+      '/assets/': path.join('/base/', conf.paths.src, '/assets/')
+    }
   };
 
   // This is the default preprocessors configuration for a usage with Karma cli
-  // The coverage preprocessor in added in gulp/unit-test.js only for single tests
+  // The coverage preprocessor is added in gulp/unit-test.js only for single tests
   // It was not possible to do it there because karma doesn't let us now if we are
   // running a single test or not
   configuration.preprocessors = {};

@@ -1,1 +1,3 @@
-angular.module('talend-todos', ['ngAnimate', 'ngSanitize', 'ngMessages']);
+(() => {
+    angular.module('talendTodoTest', ['ngSanitize', 'ngMessages']);
+})();
